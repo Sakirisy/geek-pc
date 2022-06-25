@@ -5,13 +5,7 @@ export default class Login extends Component {
   render() {
     return (
       <div>
-        <Card
-          title="Default size card"
-          extra={<a href="#">More</a>}
-          style={{
-            width: 300,
-          }}
-        >
+        <Card>
           <p>Card content</p>
           <p>Card content</p>
           <p>Card content</p>
