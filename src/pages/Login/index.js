@@ -3,7 +3,7 @@ import { Card } from 'antd'
 import { Button, Checkbox, Form, Input } from 'antd'
 import './index.scss'
 import logo from 'assets/logo.png'
-import request from 'utils/request'
+import { login } from 'api/user'
 export default class Login extends Component {
   render() {
     return (
@@ -92,14 +92,16 @@ export default class Login extends Component {
   }
 
   onFinish = async ({ mobile, code }) => {
-    const res = await request({
-      method: 'post',
-      url: '/authorizations',
-      data: {
-        mobile,
-        code,
-      },
-    })
-    console.log(res)
+    try {
+      const res = await login(mobile, code)
+      console.log(res)
+      localStorage.setItem('token',res.data.token)
+      //跳转到首页
+      this.props.history.push('/home')
+      alert('登录成功')
+    } catch(error){
+      console.dir(error)
+      alert(error.response.data.message)
+    }
   }
 }
