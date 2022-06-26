@@ -3,6 +3,7 @@ import { Card } from 'antd'
 import { Button, Checkbox, Form, Input } from 'antd'
 import './index.scss'
 import logo from 'assets/logo.png'
+import request from 'utils/request'
 export default class Login extends Component {
   render() {
     return (
@@ -90,7 +91,15 @@ export default class Login extends Component {
     )
   }
 
-  onFinish = (values) => {
-    console.log(values)
+  onFinish = async ({ mobile, code }) => {
+    const res = await request({
+      method: 'post',
+      url: '/authorizations',
+      data: {
+        mobile,
+        code,
+      },
+    })
+    console.log(res)
   }
 }
