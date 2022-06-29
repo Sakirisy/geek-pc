@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Card } from 'antd'
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Button, Checkbox, Form, Input, message } from 'antd'
 import './index.scss'
 import logo from 'assets/logo.png'
 import { login } from 'api/user'
 export default class Login extends Component {
+  state = {
+    loading: false,
+  }
   render() {
     return (
       <div className="login">
@@ -81,7 +84,12 @@ export default class Login extends Component {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                loading={this.state.loading}
+              >
                 登录
               </Button>
             </Form.Item>
@@ -92,16 +100,24 @@ export default class Login extends Component {
   }
 
   onFinish = async ({ mobile, code }) => {
+    this.setState({
+      loading: true,
+    })
     try {
       const res = await login(mobile, code)
-      console.log(res)
-      localStorage.setItem('token',res.data.token)
-      //跳转到首页
-      this.props.history.push('/home')
-      alert('登录成功')
-    } catch(error){
-      console.dir(error)
-      alert(error.response.data.message)
+      // console.log(res)
+      message.success('登录成功', 1, () => {
+        localStorage.setItem('token', res.data.token)
+        //跳转到首页
+        this.props.history.push('/home')
+      })
+    } catch (error) {
+      // console.dir(error)
+      message.warning(error.response.data.message, 1, () => {
+        this.setState({
+          loading: false,
+        })
+      })
     }
   }
 }
